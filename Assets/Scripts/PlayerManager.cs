@@ -51,7 +51,11 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("TRIGGER WITH " + other.gameObject.name);
-        _gameManager.Collided();
+        if (other.CompareTag("Asteroid")) _gameManager.Collided();
+        if (other.CompareTag("Trash"))
+        {
+            _gameManager.CatchTrash();
+            Destroy(other.gameObject);
+        }
     }
 }
