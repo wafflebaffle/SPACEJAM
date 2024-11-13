@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4a5f86020e83d0c4280acd50a0d30252
+guid: ca77c2a544bbbdb45b44fc5b09f6afaa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6791565509888792037
-    second: racoon astro 1_0
+      213: 7212628204797844963
+    second: prototype_asteroid_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: racoon astro 1_0
+      name: prototype_asteroid_0
       rect:
         serializedVersion: 2
-        x: 14
+        x: 0
         y: 0
-        width: 100
-        height: 118
+        width: 101
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5e557b519dc704e50800000000000000
-      internalID: 6791565509888792037
+      spriteID: 3ed50fb5327681460800000000000000
+      internalID: 7212628204797844963
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      racoon astro 1_0: 6791565509888792037
+      prototype_asteroid_0: 7212628204797844963
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
