@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,9 +20,12 @@ public class GameManager : MonoBehaviour
     private TMP_Text _pointsTMP;
     private Transform _lostPanel;
     private GameObject _playerObject;
+    private AudioSource _backgroundAudioSource;
 
     private IEnumerator _spawnTrash;
     private IEnumerator _spawnMissile;
+
+    private GameObject _trashSoundPrefab;
     
     void Start()
     {
@@ -28,6 +33,9 @@ public class GameManager : MonoBehaviour
         _lostPanel = canvas.transform.Find("LostPanel");
         _lostPanel.gameObject.SetActive(false);
         _playerObject = GameObject.Find("Player");
+        _backgroundAudioSource = GameObject.Find("SoundManager").GetComponent<AudioSource>();
+
+        _trashSoundPrefab = Resources.Load<GameObject>("SoundTrash");
 
         _trashSpawnPoints = new List<Vector3>();
         GameObject trashSPs = GameObject.Find("SpawnPoints_Trash");
@@ -78,6 +86,7 @@ public class GameManager : MonoBehaviour
 
     private void Died()
     {
+        _backgroundAudioSource.Stop();
         _lostPanel.gameObject.SetActive(true);
         SetGameState(GameState.Paused);
         foreach (GameObject trash in GameObject.FindGameObjectsWithTag("Trash"))
@@ -114,12 +123,14 @@ public class GameManager : MonoBehaviour
 
     public void CatchTrash()
     {
-        AddPoints(50);
+        Instantiate(_trashSoundPrefab);
+        AddPoints(500);
     }
     
     private void UpdatePointsText()
     {
-        _pointsTMP.text = $"Points: <color=#5de381>{_points}";
+        FormattableString message = $"{_points:N0}";
+        _pointsTMP.text = $"Points: <#5de381>{FormattableString.Invariant(message)}";
     }
 
     public enum GameState
