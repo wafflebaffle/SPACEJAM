@@ -46,6 +46,8 @@ public class PlayerManager : MonoBehaviour
 
         float currentSpeed = (_dashTimeRemaining > 0f) ? _dashSpeed : _moveSpeed;
 
+        //Vector3 finalRot = 
+        
         transform.position = Vector3.MoveTowards(transform.position, worldPos, currentSpeed * Time.deltaTime);
     }
 
