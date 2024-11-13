@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -25,7 +26,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator _spawnTrash;
     private IEnumerator _spawnMissile;
 
-    private GameObject _trashSoundPrefab;
+    private AudioResource _thrashAudio;
+    private AudioResource _missileAudio;
     
     void Start()
     {
@@ -35,8 +37,9 @@ public class GameManager : MonoBehaviour
         _playerObject = GameObject.Find("Player");
         _backgroundAudioSource = GameObject.Find("SoundManager").GetComponent<AudioSource>();
 
-        _trashSoundPrefab = Resources.Load<GameObject>("SoundTrash");
-
+        _thrashAudio = Resources.Load<AudioResource>("collect_trash");
+        _missileAudio = Resources.Load<AudioResource>("missile_explosion");
+        
         _trashSpawnPoints = new List<Vector3>();
         GameObject trashSPs = GameObject.Find("SpawnPoints_Trash");
         foreach (Transform trans in trashSPs.transform)
@@ -64,6 +67,21 @@ public class GameManager : MonoBehaviour
         StartCoroutine(_spawnMissile);
     }
 
+    public void MissileTouchedAsteroid()
+    {
+        AudioSource newAudio = _backgroundAudioSource.gameObject.AddComponent<AudioSource>();
+        newAudio.resource = _missileAudio;
+        newAudio.Play();
+        StartCoroutine(DeleteAudioSource(newAudio.clip.length, newAudio));
+    }
+
+    private IEnumerator DeleteAudioSource(float time, AudioSource source)
+    {
+        yield return new WaitForSeconds(time);
+        Debug.Log($"waited {time}");
+        Destroy(source);
+    }
+    
     public IEnumerator SpawnTrashCo(float time)
     {
         while (true)
@@ -123,14 +141,15 @@ public class GameManager : MonoBehaviour
 
     public void CatchTrash()
     {
-        Instantiate(_trashSoundPrefab);
-        AddPoints(500);
+        AddPoints(50);
+        AudioSource newAudio = _backgroundAudioSource.gameObject.AddComponent<AudioSource>();
+        newAudio.resource = _thrashAudio;
+        newAudio.Play();
     }
     
     private void UpdatePointsText()
     {
-        FormattableString message = $"{_points:N0}";
-        _pointsTMP.text = $"Points: <#5de381>{FormattableString.Invariant(message)}";
+        _pointsTMP.text = $"Points: <#5de381>{FormattableString.Invariant($"{_points:N0}")}";
     }
 
     public enum GameState

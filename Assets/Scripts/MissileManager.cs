@@ -32,7 +32,7 @@ public class MissileManager : MonoBehaviour
     {
         if (other.CompareTag("Asteroid"))
         {
-            
+            _gameManager.MissileTouchedAsteroid();
             Destroy(gameObject);
         }
     }
