@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (_gameManager.GetGameState() != GameManager.GameState.Playing) return;
         Vector3 worldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
         worldPos.z = transform.position.z;
 
@@ -51,11 +52,14 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Vector3 closestPoint = other.ClosestPoint(transform.position);
+        
         if (other.CompareTag("Asteroid")) _gameManager.Collided();
         if (other.CompareTag("Trash"))
         {
             _gameManager.CatchTrash();
             Destroy(other.gameObject);
         }
+        
     }
 }
