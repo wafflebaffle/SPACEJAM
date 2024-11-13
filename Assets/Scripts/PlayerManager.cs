@@ -5,6 +5,8 @@ public class PlayerManager : MonoBehaviour
 {
 
     private Camera _camera;
+    private GameManager _gameManager;
+    
     private float _moveSpeed = 4f;
     private float _dashSpeed = 15f;
     private float _dashDuration = 0.25f;
@@ -15,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     private void Update()
@@ -43,5 +46,12 @@ public class PlayerManager : MonoBehaviour
         float currentSpeed = (_dashTimeRemaining > 0f) ? _dashSpeed : _moveSpeed;
 
         transform.position = Vector3.MoveTowards(transform.position, worldPos, currentSpeed * Time.deltaTime);
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("TRIGGER WITH " + other.gameObject.name);
+        _gameManager.Collided();
     }
 }
