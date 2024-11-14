@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     private float _dashCooldown = 2f;
     private float _dashTimeRemaining = 0f;
     private float _cooldownTimeRemaining = 0f;
+    private Vector3 _movement;
     
     void Start()
     {
@@ -47,15 +48,25 @@ public class PlayerManager : MonoBehaviour
         float currentSpeed = (_dashTimeRemaining > 0f) ? _dashSpeed : _moveSpeed;
 
         //Vector3 finalRot = 
-        
+
+        if (_gameManager)
+        {
+            //_movement = transform.position - _movement;
+            _gameManager.MoveLittle();
+        }
         transform.position = Vector3.MoveTowards(transform.position, worldPos, currentSpeed * Time.deltaTime);
     }
-
+    
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Vector3 closestPoint = other.ClosestPoint(transform.position);
-        
+        //Vector3 closestPoint = other.ClosestPoint(transform.position);
+
+        if (other.CompareTag("Missile"))
+        {
+            _gameManager.Collided();
+            return;
+        }
         if (other.CompareTag("Asteroid")) _gameManager.Collided();
         if (other.CompareTag("Trash"))
         {

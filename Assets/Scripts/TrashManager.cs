@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TrashManager : MonoBehaviour
 {
@@ -7,6 +8,12 @@ public class TrashManager : MonoBehaviour
     private Vector3 _startingPosition;
     private Vector3 _endPosition;
     private bool _isPaused = false;
+    private float _moveSpeed = 3f;
+
+    private void Start()
+    {
+        _moveSpeed = Random.Range(3f, 5f);
+    }
 
     public void Setup(Vector3 startingPosition)
     {
@@ -20,6 +27,6 @@ public class TrashManager : MonoBehaviour
     private void Update()
     {
         if (_isPaused) return;
-        transform.position = Vector3.MoveTowards(transform.position, _endPosition, 3f * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _endPosition, _moveSpeed * Time.deltaTime);
     }
 }

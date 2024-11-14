@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     private GameState _gameState = GameState.Paused;
     private List<Vector3> _trashSpawnPoints;
     private List<Vector3> _missileSpawnPoints;
+    private Camera _mainCamera;
 
     private TMP_Text _pointsTMP;
     private Transform _lostPanel;
@@ -28,6 +29,9 @@ public class GameManager : MonoBehaviour
 
     private AudioResource _thrashAudio;
     private AudioResource _missileAudio;
+
+    private GameObject _backgroundBack;
+    private GameObject _backgroundFront;
     
     void Start()
     {
@@ -36,7 +40,11 @@ public class GameManager : MonoBehaviour
         _lostPanel.gameObject.SetActive(false);
         _playerObject = GameObject.Find("Player");
         _backgroundAudioSource = GameObject.Find("SoundManager").GetComponent<AudioSource>();
+        _mainCamera = Camera.main;
 
+        _backgroundBack = GameObject.Find("Background_Back");
+        _backgroundFront = GameObject.Find("Background_Front");
+        
         _thrashAudio = Resources.Load<AudioResource>("collect_trash");
         _missileAudio = Resources.Load<AudioResource>("missile_explosion");
         
@@ -67,19 +75,19 @@ public class GameManager : MonoBehaviour
         StartCoroutine(_spawnMissile);
     }
 
+    public void MoveLittle()
+    {
+        Vector3 loc = Vector3.zero + (_playerObject.transform.position / 10f);
+        loc.z = -10f;
+        _mainCamera.transform.position = loc;
+    }
+    
     public void MissileTouchedAsteroid()
     {
         AudioSource newAudio = _backgroundAudioSource.gameObject.AddComponent<AudioSource>();
         newAudio.resource = _missileAudio;
         newAudio.Play();
-        StartCoroutine(DeleteAudioSource(newAudio.clip.length, newAudio));
-    }
-
-    private IEnumerator DeleteAudioSource(float time, AudioSource source)
-    {
-        yield return new WaitForSeconds(time);
-        Debug.Log($"waited {time}");
-        Destroy(source);
+        // MAKE IT TO PLAY THE COMPONENT WITH THE SAME SOUND IF NOT PLAYING.
     }
     
     public IEnumerator SpawnTrashCo(float time)
@@ -96,9 +104,9 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitForSeconds(time);
             if (_gameState == GameState.Paused) break;
             SpawnMissile();
-            yield return new WaitForSeconds(time);
         }
     }
 
@@ -106,6 +114,7 @@ public class GameManager : MonoBehaviour
     {
         _backgroundAudioSource.Stop();
         _lostPanel.gameObject.SetActive(true);
+        _lostPanel.Find("LostPointsText").GetComponent<TMP_Text>().text = $"Points: <#5de381>{FormattableString.Invariant($"{_points:N0}")}";
         SetGameState(GameState.Paused);
         foreach (GameObject trash in GameObject.FindGameObjectsWithTag("Trash"))
         {
@@ -129,8 +138,6 @@ public class GameManager : MonoBehaviour
         Vector3 startPos = _trashSpawnPoints[Random.Range(0, _trashSpawnPoints.Count)];
         trash.GetComponent<TrashManager>().Setup(startPos);
     }
-    
-    public void AddP() => AddPoints(1);
 
     public void AddPoints(int points)
     {
